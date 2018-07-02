@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DBLOG</string>
+    <string name="welcome_to_dblog">Welcome to DBLOG</string>
 </resources>
