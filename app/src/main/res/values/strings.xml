@@ -2,7 +2,7 @@
     <string name="app_name">DBLOG</string>
     <string name="welcome_to_flash">WELCOME TO \nFLASH</string>
 
-    <string name="name">Name</string>
+    <string name="name">Your Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="account_settings">Account Settings</string>
@@ -22,6 +22,7 @@
     <string name="decline">Decline</string>
     <string name="display_name">Display Name</string>
     <string name="flash">Flash</string>
+    <string name="save_changes">Save Changes</string>
 
 
 </resources>
