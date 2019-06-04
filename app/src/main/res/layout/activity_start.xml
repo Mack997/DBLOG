@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.example.mayankagarwal.dblog.StartActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/main_logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/arbutus"
+        android:text="@string/flash"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/register_button"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/already_accnt_btn"
+        android:padding="10dp"
+        android:text="@string/already_have_an_account"
+        android:textColor="@color/textTabLight"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="9dp"
+        android:background="@drawable/new_account_btn"
+        android:padding="10dp"
+        android:text="@string/need_a_new_account"
+        android:textColor="@color/textTabLight"
+        android:textSize="14sp" />
+
+
+</RelativeLayout>
