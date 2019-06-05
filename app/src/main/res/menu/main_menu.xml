@@ -3,11 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/app_bar_search"
+        android:icon="@drawable/search_icon"
+        android:title="Search"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item
         android:id="@+id/main_account_settings_btn"
         android:title="@string/account_settings" />
-    <item
-        android:id="@+id/main_all_users_btn"
-        android:title="@string/all_users" />
+
     <item
         android:id="@+id/main_logout_btn"
         android:title="@string/log_out" />

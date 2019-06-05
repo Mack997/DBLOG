@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimaryDark">#0069CD</color>
-    <color name="colorAccent">#F44336</color>
+    <color name="colorPrimary">#A987A8</color>
+    <color name="colorPrimaryDark">#693B69</color>
+    <color name="colorAccent">#DEACF5</color>
 
-    <color name="Blue">#0A65B6</color>
-    <color name="Grey">#dddddd</color>
-    <color name="lightGrey">#F5F5F5</color>
-    <color name="darkGrey">#607D8B</color>
-    <color name="white">#ffffff</color>
-    <color name="textTabLight">#000000</color>
-    <color name="textTabBright">#ffffff</color>
-    <color name="button">#6281EC</color>
-    <color name="purple">#D961ED</color>
+    <color name="background">#E7E7E7</color>
+
 </resources>

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     tools:context="com.example.mayankagarwal.dblog.LoginActivity">
 
 
@@ -78,7 +77,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
-        android:background="@drawable/login_btn"
+        android:background="@drawable/buttons_layout"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="Login"

@@ -1,11 +1,13 @@
 package com.example.mayankagarwal.dblog;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -13,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseReference mRootRef;
     private String mCurrentUser;
 
     @Override
@@ -23,15 +24,25 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+        FloatingActionButton addPostBtn = findViewById(R.id.addPostBtn);
 
         if (mAuth.getCurrentUser() != null){
             mCurrentUser = mAuth.getCurrentUser().getUid();
-            mRootRef = FirebaseDatabase.getInstance().getReference().child("users").child(mCurrentUser);
+            DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference().child("users").child(mCurrentUser);
         }
 
         Toolbar mtoolbar = findViewById(R.id.main_page_bar);
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setTitle("FLASH");
+
+
+        addPostBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addpost = new Intent(MainActivity.this, NewPostActivity.class);
+                startActivity(addpost);
+            }
+        });
 
 
     }
