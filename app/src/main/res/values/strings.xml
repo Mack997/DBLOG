@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DBLOG</string>
+    <string name="app_name">Flash</string>
     <string name="welcome_to_flash">WELCOME TO \nFLASH</string>
 
     <string name="name">Your Name</string>
@@ -18,8 +18,9 @@
     <string name="flash">Flash</string>
     <string name="save_changes">Save Changes</string>
     <string name="add_your_description_here">Add your Description here...</string>
-    <string name="add">Add</string>
+    <string name="post">Post</string>
     <string name="todo">TODO</string>
+    <string name="login">Login</string>
 
 
 </resources>

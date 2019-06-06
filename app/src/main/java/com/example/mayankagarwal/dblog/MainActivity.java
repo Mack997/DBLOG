@@ -10,8 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,13 +24,16 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton addPostBtn = findViewById(R.id.addPostBtn);
 
-        if (mAuth.getCurrentUser() != null){
+        if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isEmailVerified()){
+
             mCurrentUser = mAuth.getCurrentUser().getUid();
-            DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference().child("users").child(mCurrentUser);
+
+        }else {
+            sendToStart();
         }
 
-        Toolbar mtoolbar = findViewById(R.id.main_page_bar);
-        setSupportActionBar(mtoolbar);
+        Toolbar mToolbar = findViewById(R.id.main_page_bar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("FLASH");
 
 

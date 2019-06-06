@@ -12,19 +12,64 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="28dp"
         android:scaleType="centerCrop"
         android:src="@drawable/main_logo" />
 
     <TextView
+        android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:fontFamily="@font/arbutus"
         android:text="@string/flash"
+        android:layout_marginTop="10dp"
         android:textAlignment="center"
         android:textAllCaps="true"
+        android:layout_below="@id/imageView"
         android:textSize="40sp" />
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_below="@id/appName">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_below="@+id/login_email">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
 
     <Button
         android:id="@+id/login_btn"
@@ -36,7 +81,7 @@
         android:layout_marginRight="5dp"
         android:background="@drawable/buttons_layout"
         android:padding="10dp"
-        android:text="@string/already_have_an_account"
+        android:text="@string/login"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
@@ -48,7 +93,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/buttons_layout"
         android:padding="10dp"
