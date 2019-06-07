@@ -1,7 +1,11 @@
 package com.example.mayankagarwal.dblog;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,9 +15,16 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.security.PrivateKey;
+
 public class MainActivity extends AppCompatActivity {
 
     private String mCurrentUser;
+
+    private HomeFragment homeFragment;
+    private NotificationFragment notificationFragment;
+    private AccountFragment accountFragment;
+    private BottomNavigationView mainNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +32,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        mainNavigation = findViewById(R.id.mainNavigation);
+        homeFragment = new HomeFragment();
+        notificationFragment = new NotificationFragment();
+        accountFragment = new AccountFragment();
+
+        mainNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()){
+                    case R.id.navHome :
+
+                        changeFragments(homeFragment);
+                        return true;
+
+                    case  R.id.navNotifications :
+
+                        changeFragments(notificationFragment);
+                        return true;
+
+                    case R.id.navAccount :
+
+                        changeFragments(accountFragment);
+                        return true;
+
+                    default :
+
+                        return false;
+                }
+            }
+        });
+
 
         FloatingActionButton addPostBtn = findViewById(R.id.addPostBtn);
 
@@ -40,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         addPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addpost = new Intent(MainActivity.this, NewPostActivity.class);
-                startActivity(addpost);
+                Intent addPost = new Intent(MainActivity.this, NewPostActivity.class);
+                startActivity(addPost);
             }
         });
 
@@ -81,11 +125,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(account);
             finish();
         }
-//        if (item.getItemId() == R.id.main_all_users_btn){
-//            Intent users = new Intent(MainActivity.this,AllUsersActivity.class);
-//            startActivity(users);
-//            finish();
-//        }
         return true;
     }
+
+    private void changeFragments(Fragment fragment){
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_navigation, fragment);
+        fragmentTransaction.commit();
+
+    }
+
 }

@@ -21,6 +21,9 @@
     <string name="post">Post</string>
     <string name="todo">TODO</string>
     <string name="login">Login</string>
+    <string name="home">Home</string>
+    <string name="notifications">Notifications</string>
+    <string name="account">Account</string>
 
 
 </resources>
