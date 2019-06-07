@@ -17,13 +17,16 @@
     <string name="display_name">Display Name</string>
     <string name="flash">Flash</string>
     <string name="save_changes">Save Changes</string>
-    <string name="add_your_description_here">Add your Description here...</string>
+    <string name="add_your_description_here">Add your Description here…</string>
     <string name="post">Post</string>
     <string name="todo">TODO</string>
     <string name="login">Login</string>
     <string name="home">Home</string>
     <string name="notifications">Notifications</string>
     <string name="account">Account</string>
+    <string name="username">Username</string>
+    <string name="post_date">Post Date</string>
+    <string name="sample_text">Sample post decription Sample post decription Sample post decription Sample post decription</string>
 
 
 </resources>

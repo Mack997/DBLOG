@@ -13,9 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.mayankagarwal.dblog.Fragments.AccountFragment;
+import com.example.mayankagarwal.dblog.Fragments.HomeFragment;
+import com.example.mayankagarwal.dblog.Fragments.NotificationFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.security.PrivateKey;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,52 +35,56 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-        mainNavigation = findViewById(R.id.mainNavigation);
-        homeFragment = new HomeFragment();
-        notificationFragment = new NotificationFragment();
-        accountFragment = new AccountFragment();
-
-        mainNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()){
-                    case R.id.navHome :
-
-                        changeFragments(homeFragment);
-                        return true;
-
-                    case  R.id.navNotifications :
-
-                        changeFragments(notificationFragment);
-                        return true;
-
-                    case R.id.navAccount :
-
-                        changeFragments(accountFragment);
-                        return true;
-
-                    default :
-
-                        return false;
-                }
-            }
-        });
-
-
         FloatingActionButton addPostBtn = findViewById(R.id.addPostBtn);
+
+
+        Toolbar mToolbar = findViewById(R.id.main_page_bar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("FLASH");
+
 
         if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isEmailVerified()){
 
             mCurrentUser = mAuth.getCurrentUser().getUid();
 
-        }else {
-            sendToStart();
-        }
+            mainNavigation = findViewById(R.id.mainNavigation);
+            homeFragment = new HomeFragment();
+            notificationFragment = new NotificationFragment();
+            accountFragment = new AccountFragment();
 
-        Toolbar mToolbar = findViewById(R.id.main_page_bar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("FLASH");
+            changeFragments(homeFragment);
+
+            mainNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()){
+                        case R.id.navHome :
+
+                            changeFragments(homeFragment);
+                            return true;
+
+                        case  R.id.navNotifications :
+
+                            changeFragments(notificationFragment);
+                            return true;
+
+                        case R.id.navAccount :
+
+                            changeFragments(accountFragment);
+                            return true;
+
+                        default :
+
+                            return false;
+                    }
+                }
+            });
+
+
+            }else {
+                sendToStart();
+        }
 
 
         addPostBtn.setOnClickListener(new View.OnClickListener() {

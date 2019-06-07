@@ -26,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@+id/post_page_bar">
 
         <ImageView
-            android:id="@+id/postImage"
+            android:id="@+id/addPostImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/post_page_bar"
@@ -48,8 +48,8 @@
             android:id="@+id/add_post_image_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/postImage"
-            android:layout_alignEnd="@id/postImage"
+            android:layout_alignBottom="@id/addPostImage"
+            android:layout_alignEnd="@id/addPostImage"
             android:background="@color/colorPrimary"
             android:clickable="true"
             android:src="@drawable/camera_btn"

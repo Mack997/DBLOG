@@ -34,6 +34,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -69,7 +70,7 @@ public class NewPostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FloatingActionButton addPostImageBtn = findViewById(R.id.add_post_image_btn);
-        postImage = findViewById(R.id.postImage);
+        postImage = findViewById(R.id.addPostImage);
         addPostBtn = findViewById(R.id.uploadPost);
         postDesc = findViewById(R.id.postDesc);
         mProgressDialog = new ProgressDialog(this);
@@ -115,9 +116,22 @@ public class NewPostActivity extends AppCompatActivity {
 
             final String randomName = random();
 
+
+            File newImageFile = new File(postImageUri.getPath());
+
+            compressedImageFile = new Compressor(NewPostActivity.this)
+                    .setMaxHeight(720)
+                    .setMaxWidth(720)
+                    .setQuality(50)
+                    .compressToBitmap(newImageFile);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageData = baos.toByteArray();
+
             final StorageReference image_path = storageReference.child("post_images").child(randomName + ".jpg");
 
-            image_path.putFile(postImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            image_path.putBytes(imageData).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()){
@@ -138,7 +152,7 @@ public class NewPostActivity extends AppCompatActivity {
                                 compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                                 byte [] thumbData = baos.toByteArray();
 
-                                final StorageReference thumb_image_path = storageReference.child("post_images").child("thumbs").child(randomName + ".jpg");
+                                final StorageReference thumb_image_path = storageReference.child("post_images/thumbs");
 
 
                                 thumb_image_path.putBytes(thumbData).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -157,7 +171,7 @@ public class NewPostActivity extends AppCompatActivity {
                                                 userMap.put("image", postDownload_uri);
                                                 userMap.put("thumb_image", thumbPostDownload_uri);
                                                 userMap.put("description", post_description);
-                                                userMap.put("used_id", user_id);
+                                                userMap.put("user_id", user_id);
                                                 userMap.put("timestamp", FieldValue.serverTimestamp());
 
                                                 firebaseFirestore.collection("Posts").add(userMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
