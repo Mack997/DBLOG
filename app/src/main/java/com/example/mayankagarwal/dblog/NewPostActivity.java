@@ -34,7 +34,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -57,6 +56,8 @@ public class NewPostActivity extends AppCompatActivity {
     private StorageReference storageReference;
 
     private FirebaseFirestore firebaseFirestore;
+
+    String postDownload_uri ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,17 +118,17 @@ public class NewPostActivity extends AppCompatActivity {
             final String randomName = random();
 
 
-            File newImageFile = new File(postImageUri.getPath());
+            File mainImageFile = new File(postImageUri.getPath());
 
-            compressedImageFile = new Compressor(NewPostActivity.this)
+            Bitmap mainCompressedImageFile = new Compressor(NewPostActivity.this)
                     .setMaxHeight(720)
                     .setMaxWidth(720)
                     .setQuality(50)
-                    .compressToBitmap(newImageFile);
+                    .compressToBitmap(mainImageFile);
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] imageData = baos.toByteArray();
+            ByteArrayOutputStream mainArray = new ByteArrayOutputStream();
+            mainCompressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, mainArray);
+            byte[] imageData = mainArray.toByteArray();
 
             final StorageReference image_path = storageReference.child("post_images").child(randomName + ".jpg");
 
@@ -140,19 +141,21 @@ public class NewPostActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(final Uri uri) {
 
-                                File newImageFile = new File(postImageUri.getPath());
+                                postDownload_uri = uri.toString();
+
+                                File thumbImageFile = new File(postImageUri.getPath());
 
                                 compressedImageFile = new Compressor(NewPostActivity.this)
                                         .setMaxWidth(100)
                                         .setMaxHeight(100)
                                         .setQuality(20)
-                                        .compressToBitmap(newImageFile);
+                                        .compressToBitmap(thumbImageFile);
 
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                                byte [] thumbData = baos.toByteArray();
+                                ByteArrayOutputStream thumbArray = new ByteArrayOutputStream();
+                                compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, thumbArray);
+                                byte [] thumbData = thumbArray.toByteArray();
 
-                                final StorageReference thumb_image_path = storageReference.child("post_images/thumbs");
+                                final StorageReference thumb_image_path = storageReference.child("post_images/thumbs").child(randomName + ".jpg");
 
 
                                 thumb_image_path.putBytes(thumbData).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -163,8 +166,6 @@ public class NewPostActivity extends AppCompatActivity {
                                             public void onSuccess(Uri uri) {
 
                                                 String thumbPostDownload_uri = uri.toString();
-
-                                                String postDownload_uri = uri.toString();
 
                                                 Map<String, Object> userMap = new HashMap<>();
 

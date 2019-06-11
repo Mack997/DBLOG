@@ -2,10 +2,10 @@ package com.example.mayankagarwal.dblog.Model;
 
 import java.util.Date;
 
-public class Post {
+public class Post extends PostId {
 
 
-    public String user_id, image, description, thumb_image;
+    public String user_id, image, description, thumb_image, postId;
 
     public Date timestamp;
 
