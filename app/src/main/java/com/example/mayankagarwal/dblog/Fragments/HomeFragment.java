@@ -1,10 +1,14 @@
 package com.example.mayankagarwal.dblog.Fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,8 @@ import android.widget.Toast;
 import com.example.mayankagarwal.dblog.Adapters.PostRecyclerAdapter;
 import com.example.mayankagarwal.dblog.Model.Post;
 import com.example.mayankagarwal.dblog.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +45,8 @@ public class HomeFragment extends Fragment {
     private PostRecyclerAdapter postRecyclerAdapter;
 
 
+
+    Parcelable recyclerViewState;
     FirebaseAuth mAuth;
     FirebaseFirestore firebaseFirestore;
     private DocumentSnapshot lastVisible;
@@ -52,7 +61,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         postList = new ArrayList<>();
@@ -61,6 +69,7 @@ public class HomeFragment extends Fragment {
 
         postListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         postListView.setAdapter(postRecyclerAdapter);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -72,51 +81,57 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     Boolean reachedLast = !recyclerView.canScrollVertically(-1);
-                    if (reachedLast){
+                    if (reachedLast) {
 
                         loadMore();
                     }
                 }
             });
 
-            Query sortPosts = firebaseFirestore.collection("Posts").orderBy("timestamp", Query.Direction.DESCENDING);
-
-
-            sortPosts.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-                    if (isFirstPage){
-                        lastVisible = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
-                    }
-                    for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            String postID = doc.getDocument().getId();
-
-                            Post post = doc.getDocument().toObject(Post.class).withId(postID);
-
-                            if (isFirstPage) {
-
-                                postList.add(post);
-
-                            }else {
-
-                                postList.add(0, post);
-
-                            }
-                            postRecyclerAdapter.notifyDataSetChanged();
-
-                        }
-                    }
-                    isFirstPage = false;
-                }
-            });
-
         }
+        loadFirst();
         return view;
     }
+
+    public void loadFirst() {
+
+        Query sortPosts = firebaseFirestore.collection("Posts")
+                .orderBy("timestamp", Query.Direction.DESCENDING);
+
+
+        sortPosts.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if (isFirstPage){
+                    lastVisible = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
+                }
+                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+
+                    if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                        String postID = doc.getDocument().getId();
+
+                        Post post = doc.getDocument().toObject(Post.class).withId(postID);
+
+                        if (isFirstPage) {
+
+                            postList.add(post);
+
+                        }else {
+
+                            postList.add(0, post);
+
+                        }
+                        postRecyclerAdapter.notifyDataSetChanged();
+
+                    }
+                }
+                isFirstPage = false;
+            }
+        });
+    }
+
 
     public void loadMore(){
 

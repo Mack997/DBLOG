@@ -20,13 +20,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -58,8 +63,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        final String currentUserID = mAuth.getCurrentUser().getUid();
+        holder.setIsRecyclable(false);
 
+        final String currentUserID = mAuth.getCurrentUser().getUid();
 
         String desc_data = postList.get(position).getDescription();
         holder.setDescText(desc_data);
@@ -70,12 +76,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         Log.d("Image: ", post_image_url);
 
 
-        final String postId = postList.get(position).postId;
-
-
+        final String fetchedPostId = postList.get(position).PostId;
 
         String user_id = postList.get(position).getUser_id();
-
 
         firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -94,17 +97,54 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         String date = DateFormat.format("dd/MM/yyyy", new Date(milliseconds)).toString();
         holder.setTime(date);
 
+
+        firebaseFirestore.collection("Posts/" + fetchedPostId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                if (!documentSnapshot.isEmpty()){
+
+                    int count = documentSnapshot.size();
+                    holder.likeCount(count);
+
+                }else {
+
+                    holder.likeCount(0);
+                }
+            }
+        });
+
+        firebaseFirestore.collection("Posts/" + fetchedPostId + "/Likes").document(currentUserID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()){
+                    holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.like_pressed_icon));
+                }else{
+                    holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.like_not_pressed_icon));
+                }
+            }
+        });
+
+
         holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Map<String, Object> likesMaps = new HashMap<>();
+                firebaseFirestore.collection("Posts/" + fetchedPostId + "/Likes").document(currentUserID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                Toast.makeText(context, postId, Toast.LENGTH_SHORT).show();
+                        if (!task.getResult().exists()){
+                            Map<String, Object> likesMaps = new HashMap<>();
 
-                likesMaps.put("timestamp", FieldValue.serverTimestamp());
+                            likesMaps.put("timestamp", FieldValue.serverTimestamp());
 
-                firebaseFirestore.collection("Posts/" + postId + "/Likes").document(currentUserID).set(likesMaps);
+                            firebaseFirestore.collection("Posts/" + fetchedPostId + "/Likes").document(currentUserID).set(likesMaps);
+                        }else {
+                            firebaseFirestore.collection("Posts/" + fetchedPostId + "/Likes").document(currentUserID).delete();
+                        }
+                    }
+                });
             }
         });
 
@@ -173,8 +213,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             postDate = mView.findViewById(R.id.postDate);
 
             postDate.setText(date);
+        }
 
-
+        public void likeCount(int count){
+            postLikeCount = mView.findViewById(R.id.likeCount);
+            postLikeCount.setText(count + " Likes");
         }
     }
 }
