@@ -96,7 +96,7 @@ public class StartActivity extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
 
                             if (mAuth.getCurrentUser().isEmailVerified()){
-                                Intent mainIntent = new Intent(StartActivity.this, SettingsActivity.class);
+                                Intent mainIntent = new Intent(StartActivity.this, ProfileActivity.class);
                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(mainIntent);
                                 finish();

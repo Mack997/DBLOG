@@ -2,7 +2,7 @@
     <string name="app_name">Flash</string>
     <string name="welcome_to_flash">WELCOME TO \nFLASH</string>
 
-    <string name="name">Your Name</string>
+    <string name="name">Your Display Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="account_settings">Account Settings</string>
@@ -23,11 +23,14 @@
     <string name="login">Login</string>
     <string name="home">Home</string>
     <string name="notifications">Notifications</string>
-    <string name="account">Account</string>
+    <string name="friends">Friends</string>
     <string name="username">Username</string>
     <string name="post_date">Post Date</string>
     <string name="sample_text">Sample post decription Sample post decription Sample post decription Sample post decription</string>
     <string name="_0_likes">0 Likes</string>
+    <string name="edit">Edit</string>
+    <string name="write_something_about_yourself">Write something about yourself...</string>
+    <string name="search">Search</string>
 
 
 </resources>

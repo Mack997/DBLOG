@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private NotificationFragment notificationFragment;
     private AccountFragment accountFragment;
+
     private BottomNavigationView mainNavigation;
 
     @Override
@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
             accountFragment = new AccountFragment();
 
             changeFragments(homeFragment);
-
-
 
             mainNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -130,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             sendToStart();
         }
         if (item.getItemId() == R.id.main_account_settings_btn){
-            Intent account = new Intent(MainActivity.this,SettingsActivity.class);
+            Intent account = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(account);
             finish();
         }

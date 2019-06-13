@@ -1,21 +1,19 @@
 package com.example.mayankagarwal.dblog;
 
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,13 +23,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,19 +35,17 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
 
-public class SettingsActivity extends AppCompatActivity {
+
+public class EditProfile extends AppCompatActivity {
+
 
     private CircleImageView mDisplayImage;
-    private EditText mDisplayName;
+    private EditText mDisplayName, mDisplayBio;
     private ProgressDialog mProgressDialog;
 
     private Uri mainImageURI = null;
@@ -64,20 +57,16 @@ public class SettingsActivity extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore;
 
-    public SettingsActivity() {
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_edit_profile);
 
-        mDisplayImage = findViewById(R.id.settings_profile_image);
-        mDisplayName = findViewById(R.id.settings_display_name);
-        FloatingActionButton camera_btn = findViewById(R.id.settings_camera_btn);
+        mDisplayImage = findViewById(R.id.edit_profile_image);
+        mDisplayName = findViewById(R.id.edit_display_name);
+        mDisplayBio = findViewById(R.id.edit_bio);
 
-        Button mSaveBtn = findViewById(R.id.update_btn);
+        Button mSavebtn = findViewById(R.id.update_btn);
         mProgressDialog = new ProgressDialog(this);
 
         //Toolbar
@@ -95,63 +84,66 @@ public class SettingsActivity extends AppCompatActivity {
         firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    if (task.getResult().exists()){
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
 
                         String name = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
+                        String bio = task.getResult().getString("bio");
 
                         mDisplayName.setText(name);
-                        mDisplayName.setSelection(mDisplayName.getText().length());
+                        mDisplayBio.setText(bio);
+                        mDisplayBio.setSelection(mDisplayBio.length());
+                        mDisplayName.setSelection(mDisplayName.length());
+
 
                         RequestOptions placeholderRequest = new RequestOptions();
                         placeholderRequest.placeholder(R.drawable.default_image);
-                        Glide.with(SettingsActivity.this).setDefaultRequestOptions(placeholderRequest).load(image).into(mDisplayImage);
+                        Glide.with(EditProfile.this).setDefaultRequestOptions(placeholderRequest).load(image).into(mDisplayImage);
 
                     }
-                }else {
+                } else {
 
                     String error = task.getException().getMessage();
-                    Toast.makeText(SettingsActivity.this, "FIRESTORE retrieve error: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfile.this, "FIRESTORE retrieve error: " + error, Toast.LENGTH_SHORT).show();
 
                 }
             }
         });
 
-
-        mSaveBtn.setOnClickListener(new View.OnClickListener() {
+        mSavebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateDetails();
             }
         });
 
-
-
-        camera_btn.setOnClickListener(new View.OnClickListener() {
+        mDisplayImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(SettingsActivity.this,new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(EditProfile.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(EditProfile.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
-                    }else {
+                    } else {
                         BringImagePicker();
                     }
-                }else {
+                } else {
                     BringImagePicker();
                 }
             }
         });
     }
 
-    public void updateDetails(){
+    public void updateDetails() {
 
         final String user_name = mDisplayName.getText().toString();
+        final String user_bio = mDisplayBio.getText().toString();
 
-        if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
+
+        if (!TextUtils.isEmpty(user_name) && !TextUtils.isEmpty(user_bio)) {
 
             mProgressDialog.setTitle("Uploading Image");
             mProgressDialog.setMessage("please wait while the image is being uploaded");
@@ -163,7 +155,7 @@ public class SettingsActivity extends AppCompatActivity {
             image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
 
                         image_path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
@@ -177,61 +169,63 @@ public class SettingsActivity extends AppCompatActivity {
                                 Map<String, String> userMap = new HashMap<>();
 
                                 userMap.put("name", user_name);
+                                userMap.put("bio", user_bio);
                                 userMap.put("image", download_uri);
                                 userMap.put("device_token", device_token);
 
                                 firebaseFirestore.collection("Users").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()){
+                                        if (task.isSuccessful()) {
 
                                             mProgressDialog.dismiss();
-                                            Toast.makeText(SettingsActivity.this, "Account updated", Toast.LENGTH_SHORT).show();
+                                            back();
+                                            Toast.makeText(EditProfile.this, "Account updated", Toast.LENGTH_SHORT).show();
 
-                                        }else {
+                                        } else {
 
                                             String error = task.getException().getMessage();
-                                            Toast.makeText(SettingsActivity.this, "FIRESTORE Error: " + error, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(EditProfile.this, "Fire-store Error: " + error, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                             }
                         });
 
-                    }else {
+                    } else {
                         String error = task.getException().getMessage();
-                        Toast.makeText(SettingsActivity.this, "Image Error: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditProfile.this, "Image Error: " + error, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
-        }else {
+        } else {
             mProgressDialog.hide();
-            Toast.makeText(SettingsActivity.this, "Please fill the name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditProfile.this, "Please fill all the details", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void BringImagePicker(){
+    public void BringImagePicker() {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(1, 1)
-                .start(SettingsActivity.this);
+                .start(EditProfile.this);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
-            if (resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
 
                 mainImageURI = result.getUri();
                 mDisplayImage.setImageURI(mainImageURI);
 
 
-            }else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(this, "Error: " + error, Toast.LENGTH_SHORT).show();
             }
@@ -243,9 +237,7 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == android.R.id.home){
-            Intent back = new Intent(SettingsActivity.this,MainActivity.class);
-            startActivity(back);
-            finish();
+            back();
         }
         return true;
     }
@@ -253,7 +245,11 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent back = new Intent(SettingsActivity.this,MainActivity.class);
+        back();
+    }
+
+    public void back(){
+        Intent back = new Intent(EditProfile.this, ProfileActivity.class);
         startActivity(back);
         finish();
     }
