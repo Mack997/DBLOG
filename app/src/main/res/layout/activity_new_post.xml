@@ -7,8 +7,13 @@
     tools:context=".NewPostActivity"
     android:background="@android:color/white">
 
-    <include layout="@layout/app_bar_layout"
-        android:id="@+id/post_page_bar"/>
+    <include
+        android:id="@+id/post_page_bar"
+        layout="@layout/app_bar_layout"
+        app:layout_constraintBottom_toTopOf="@+id/relative_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <RelativeLayout
