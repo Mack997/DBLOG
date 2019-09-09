@@ -1,14 +1,14 @@
 package com.example.mayankagarwal.dblog;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendToStart() {
-        Intent startIntent = new Intent(MainActivity.this ,StartActivity.class);
+        Intent startIntent = new Intent(MainActivity.this , LoginActivity.class);
         startActivity(startIntent);
         finish();
     }
